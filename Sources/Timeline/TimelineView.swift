@@ -156,5 +156,6 @@ struct TimelineView_Previews: PreviewProvider {
         TimelineView(
             viewModel: .init(items: mockData)
         )
+        .tint(.red.opacity(0.3))
     }
 }

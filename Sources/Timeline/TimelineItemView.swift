@@ -6,7 +6,8 @@ public struct TimelineItemView: View {
 
     public var body: some View {
         ZStack(alignment: .leading) {
-            Color.red.opacity(0.3)
+            Rectangle()
+                .fill(.tint)
 
             Text(item.text)
                 .padding(.horizontal)
@@ -23,5 +24,6 @@ struct TimelineItemView_Previews: PreviewProvider {
                 text: "Test Item"
             )
         )
+        .tint(.red.opacity(0.3))
     }
 }
