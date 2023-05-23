@@ -1,13 +1,15 @@
 import SwiftUI
 
-public struct TimelineView: View {
+public struct TimelineView<ItemView: View>: View {
 
     @ObservedObject private var viewModel: TimelineViewModel
 
-    private let trailingIdentifier: String
-
     @State private var rowHeight: CGFloat
     @State private var rowOffset: CGFloat
+
+    @ViewBuilder private let item: (TimelineItem) -> ItemView
+
+    private let trailingIdentifier = "time-line-trailing-id"
 
     public var body: some View {
         ScrollViewReader { scrollReader in
@@ -43,16 +45,35 @@ public struct TimelineView: View {
         .frame(height: CGFloat(viewModel.items.count) * (rowHeight + rowOffset) + rowOffset)
     }
 
+    /// Initialize TimelinView with custome item view
+    /// - Parameters:
+    ///   - rowHeight: Height of row in timelines if has more as one
+    ///   - rowOffset: Offset between rows if timeline has more as one
+    ///   - viewModel: View model for timeline
+    ///   - item: Custom item view initialized with timeline item protocol
     public init(
-        trailingIdentifier: String = "time-line-trailing-id",
+        rowHeight: CGFloat = 60,
+        rowOffset: CGFloat = 10,
+        viewModel: TimelineViewModel,
+        @ViewBuilder item: @escaping (TimelineItem) -> ItemView
+    ) {
+        self.rowHeight = rowHeight
+        self.rowOffset = rowOffset
+        self.viewModel = viewModel
+        self.item = item
+    }
+}
+
+extension TimelineView where ItemView == TimelineItemView {
+    public init(
         rowHeight: CGFloat = 60,
         rowOffset: CGFloat = 10,
         viewModel: TimelineViewModel
     ) {
-        self.trailingIdentifier = trailingIdentifier
         self.rowHeight = rowHeight
         self.rowOffset = rowOffset
         self.viewModel = viewModel
+        self.item = TimelineItemView.init(item:)
     }
 }
 
@@ -104,14 +125,6 @@ private extension TimelineView {
 }
 
 struct TimelineView_Previews: PreviewProvider {
-
-    private struct TestItem: TimelineItem {
-        let id: Int = UUID().hashValue
-        var start: Date
-        var end: Date
-        var isContinous: Bool = true
-        var text: String
-    }
 
     private static let mockData: [[TestItem]] = [
         // Row 1

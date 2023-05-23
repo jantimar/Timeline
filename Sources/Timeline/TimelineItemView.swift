@@ -1,10 +1,10 @@
 import SwiftUI
 
-struct TimelineItemView: View {
+public struct TimelineItemView: View {
 
-    var item: TimelineItem
+    public var item: TimelineItem
 
-    var body: some View {
+    public var body: some View {
         ZStack(alignment: .leading) {
             Color.red.opacity(0.3)
 
@@ -12,5 +12,16 @@ struct TimelineItemView: View {
                 .padding(.horizontal)
         }
         .cornerRadius(4)
+    }
+}
+
+struct TimelineItemView_Previews: PreviewProvider {
+
+    static var previews: some View {
+        TimelineItemView(
+            item: TestItem(
+                text: "Test Item"
+            )
+        )
     }
 }
