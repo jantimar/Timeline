@@ -7,7 +7,7 @@
 
 MVP concept in SwiftUI for show items in timeline (columns and rows), can be useful for show Time flow, TV program or explain Ant-Man Quantumania.
 
-![default](/assets/sample.png)
+![default](/assets/sample2.png)
 Sample
 
 ### TODO:

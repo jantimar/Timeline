@@ -1,6 +1,6 @@
 import Foundation
 
-public struct TimelineScale {
+public struct TimelineScale: Equatable {
     /// Name of timeline scale
     public var title: String
     /// Time interval visible in one moment ( from leading to trailing )

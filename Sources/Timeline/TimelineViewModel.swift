@@ -49,9 +49,4 @@ extension TimelineViewModel {
         let timeIntervalOffset = date2.timeIntervalSince(date1)
         return chunk * timeIntervalOffset
     }
-
-//    func numberOfPages(_ date1: Date, and date2: Date, width: CGFloat) -> Int {
-//        let fullWidth = widthBetween(date1, and: date2, width: width)
-//        return max(1, Int(fullWidth / width))
-//    }
 }

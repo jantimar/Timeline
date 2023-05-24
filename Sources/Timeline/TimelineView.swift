@@ -1,6 +1,6 @@
 import SwiftUI
 
-public struct TimelineView<ItemView: View>: View {
+public struct TimelineView<ItemView: View, GridView: View>: View {
 
     @ObservedObject private var viewModel: TimelineViewModel
 
@@ -8,6 +8,8 @@ public struct TimelineView<ItemView: View>: View {
     @State private var rowOffset: CGFloat
 
     @ViewBuilder private let item: (TimelineItem) -> ItemView
+    /// Initialize grdi view with  minimal, maximal date and width
+    @ViewBuilder private let grid: (Date, Date, CGFloat) -> GridView?
 
     private let trailingIdentifier = "time-line-trailing-id"
 
@@ -18,7 +20,8 @@ public struct TimelineView<ItemView: View>: View {
                     HStack(spacing: 0) {
                         ZStack(alignment: .topLeading) {
                             // Add Grid view
-
+                            grid(viewModel.minimalDate, viewModel.maximalDate, reader.size.width)
+                                .zIndex(-0.1)
 
                             // Rows
                             rows(width: reader.size.width)
@@ -42,7 +45,8 @@ public struct TimelineView<ItemView: View>: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .frame(height: CGFloat(viewModel.items.count) * (rowHeight + rowOffset) + rowOffset)
+        .frame(height: CGFloat(viewModel.items.count) * (rowHeight + rowOffset) + 40)
+        // + 40 is grid numbers height
     }
 
     /// Initialize TimelinView with custome item view
@@ -55,16 +59,18 @@ public struct TimelineView<ItemView: View>: View {
         rowHeight: CGFloat = 60,
         rowOffset: CGFloat = 10,
         viewModel: TimelineViewModel,
-        @ViewBuilder item: @escaping (TimelineItem) -> ItemView
+        @ViewBuilder item: @escaping (TimelineItem) -> ItemView,
+        @ViewBuilder grid: @escaping (Date, Date, CGFloat) -> GridView?
     ) {
         self.rowHeight = rowHeight
         self.rowOffset = rowOffset
         self.viewModel = viewModel
         self.item = item
+        self.grid = grid
     }
 }
 
-extension TimelineView where ItemView == TimelineItemView {
+extension TimelineView where ItemView == TimelineItemView, GridView == TimelineGridView {
     public init(
         rowHeight: CGFloat = 60,
         rowOffset: CGFloat = 10,
@@ -74,10 +80,36 @@ extension TimelineView where ItemView == TimelineItemView {
         self.rowOffset = rowOffset
         self.viewModel = viewModel
         self.item = TimelineItemView.init(item:)
+        self.grid = { minimalDate, maximalDate, width in
+            TimelineGridView(
+                viewModel: .init(
+                    scale: viewModel.scale,
+                    minimalDate: minimalDate,
+                    maximalDate: maximalDate
+                ),
+                width: width
+            )
+        }
+    }
+}
+
+extension TimelineView where GridView == EmptyView {
+    public init(
+        rowHeight: CGFloat = 60,
+        rowOffset: CGFloat = 10,
+        viewModel: TimelineViewModel,
+        @ViewBuilder item: @escaping (TimelineItem) -> ItemView
+    ) {
+        self.rowHeight = rowHeight
+        self.rowOffset = rowOffset
+        self.viewModel = viewModel
+        self.item = item
+        self.grid = { _, _, _ in nil }
     }
 }
 
 private extension TimelineView {
+    // Vertical rows
     @ViewBuilder
     func rows(width: CGFloat) -> some View {
         VStack(alignment: .leading, spacing: rowOffset) {
@@ -91,6 +123,7 @@ private extension TimelineView {
         }
     }
 
+    // Horizontal columns in row
     @ViewBuilder
     func columns(items: [TimelineItem], width: CGFloat) -> some View {
         // Iterate items in row
@@ -156,6 +189,6 @@ struct TimelineView_Previews: PreviewProvider {
         TimelineView(
             viewModel: .init(items: mockData)
         )
-        .tint(.red.opacity(0.3))
+        .tint(.red.opacity(0.9))
     }
 }
