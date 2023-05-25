@@ -1,0 +1,6 @@
+# Swiftlint configuration
+function_parameter_count:
+    warning: 8
+    error: 12
+
+reporter: "xcode"
