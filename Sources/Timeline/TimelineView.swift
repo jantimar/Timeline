@@ -1,11 +1,15 @@
 import SwiftUI
 
-public struct TimelineView<ItemView: View, GridView: View>: View {
+public struct TimelineView<
+    Item: TimelineItem & Identifiable,
+    ItemView: View,
+    GridView: View
+>: View {
 
-    @ObservedObject private var viewModel: TimelineViewModel
+    @ObservedObject private var viewModel: TimelineViewModel<Item>
 
     ///  Create View for specific Item
-    @ViewBuilder private let item: (TimelineItem) -> ItemView
+    @ViewBuilder private let item: (Item) -> ItemView
     /// Initialize grdi view with  minimal, maximal date and width
     @ViewBuilder private let grid: (Date, Date, CGFloat) -> GridView?
 
@@ -58,8 +62,8 @@ public struct TimelineView<ItemView: View, GridView: View>: View {
     public init(
         rowHeight: CGFloat = 60,
         rowOffset: CGFloat = 10,
-        viewModel: TimelineViewModel,
-        @ViewBuilder item: @escaping (TimelineItem) -> ItemView,
+        viewModel: TimelineViewModel<Item>,
+        @ViewBuilder item: @escaping (Item) -> ItemView,
         @ViewBuilder grid: @escaping (Date, Date, CGFloat) -> GridView?
     ) {
         self.rowHeight = rowHeight
@@ -75,7 +79,7 @@ extension TimelineView where ItemView == TimelineItemView, GridView == TimelineG
     public init(
         rowHeight: CGFloat = 60,
         rowOffset: CGFloat = 10,
-        viewModel: TimelineViewModel
+        viewModel: TimelineViewModel<Item>
     ) {
         self.rowHeight = rowHeight
         self.rowOffset = rowOffset
@@ -98,8 +102,8 @@ extension TimelineView where GridView == EmptyView {
     public init(
         rowHeight: CGFloat = 60,
         rowOffset: CGFloat = 10,
-        viewModel: TimelineViewModel,
-        @ViewBuilder item: @escaping (TimelineItem) -> ItemView
+        viewModel: TimelineViewModel<Item>,
+        @ViewBuilder item: @escaping (Item) -> ItemView
     ) {
         self.rowHeight = rowHeight
         self.rowOffset = rowOffset
@@ -127,29 +131,26 @@ private extension TimelineView {
 
     // Horizontal columns in row
     @ViewBuilder
-    func columns(items: [TimelineItem], width: CGFloat) -> some View {
+    func columns(items: [Item], width: CGFloat) -> some View {
         // Iterate items in row
         ForEach(items, id: \.id) { item in
             HStack(spacing: 0) {
-                TimelineItemView(
-                    item: item
-
-                )
-                .frame(
-                    width: viewModel.widthBetween(
-                        item.start,
-                        and: item.end,
-                        width: width
-                    ),
-                    height: rowHeight
-                )
-                .padding(
-                    .leading,
-                    viewModel.horizontalOffset(
-                        for: item.start,
-                        width: width
+                self.item(item)
+                    .frame(
+                        width: viewModel.widthBetween(
+                            item.start,
+                            and: item.end,
+                            width: width
+                        ),
+                        height: rowHeight
                     )
-                )
+                    .padding(
+                        .leading,
+                        viewModel.horizontalOffset(
+                            for: item.start,
+                            width: width
+                        )
+                    )
 
                 Spacer()
             }

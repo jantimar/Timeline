@@ -26,9 +26,9 @@ As a Swift Package
 
 ### Usage
 
-Import package with `import Tiemline` to enable initialize a view.
+Import package with `import Timeline` to enable initialize a view.
 
-Prepare your data to implement `TimelineItem` protocol in 2 dimensions array `[[TimelineItem]]`
+Prepare your data to implement `TimelineItem` and `Identifiable` protocols in 2 dimensions array `[[TimelineItem]]`
 
 Initialize a`TimelineViewModel` with items. You can setup a `TimelineScale` or used a default a `day` scale.
 

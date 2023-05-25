@@ -1,9 +1,9 @@
 import Foundation
 
-public final class TimelineViewModel: ObservableObject {
+public final class TimelineViewModel<Item: TimelineItem & Identifiable>: ObservableObject {
 
     @Published var scale: TimelineScale
-    @Published var items: [[TimelineItem]]
+    @Published var items: [[Item]]
 
     let minimalDate: Date
     let maximalDate: Date
@@ -14,7 +14,7 @@ public final class TimelineViewModel: ObservableObject {
     ///   - items: 2 dimensions rows wher firs array is rows and second dimension is items in current row
     public init(
         scale: TimelineScale = .day,
-        items: [[TimelineItem]]
+        items: [[Item]]
     ) {
         self.scale = scale
         self.items = items

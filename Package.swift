@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "Timeline",
-    platforms: [.iOS(.v15), .tvOS(.v15)],
+    platforms: [.iOS(.v15), .tvOS(.v15), .macOS(.v13)],
     products: [
         .library(
             name: "Timeline",
