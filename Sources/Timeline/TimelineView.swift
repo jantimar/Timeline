@@ -4,13 +4,13 @@ public struct TimelineView<ItemView: View, GridView: View>: View {
 
     @ObservedObject private var viewModel: TimelineViewModel
 
-    @State private var rowHeight: CGFloat
-    @State private var rowOffset: CGFloat
-
+    ///  Create View for specific Item
     @ViewBuilder private let item: (TimelineItem) -> ItemView
     /// Initialize grdi view with  minimal, maximal date and width
     @ViewBuilder private let grid: (Date, Date, CGFloat) -> GridView?
 
+    private var rowHeight: CGFloat
+    private var rowOffset: CGFloat
     private let trailingIdentifier = "time-line-trailing-id"
 
     public var body: some View {
@@ -70,6 +70,7 @@ public struct TimelineView<ItemView: View, GridView: View>: View {
     }
 }
 
+// MARK: - Initis
 extension TimelineView where ItemView == TimelineItemView, GridView == TimelineGridView {
     public init(
         rowHeight: CGFloat = 60,
@@ -108,6 +109,7 @@ extension TimelineView where GridView == EmptyView {
     }
 }
 
+// MARK: - Helper views
 private extension TimelineView {
     // Vertical rows
     @ViewBuilder
@@ -157,6 +159,7 @@ private extension TimelineView {
     }
 }
 
+// MARK: - Previews
 struct TimelineView_Previews: PreviewProvider {
 
     private static let mockData: [[TestItem]] = [

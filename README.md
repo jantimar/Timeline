@@ -9,8 +9,6 @@ MVP concept in SwiftUI for show items in timeline (columns and rows), can be use
 
 ### TODO list
 - [ ] Documentations
-- [ ] Clickable items
-- [ ] More customizable
 - [ ] Add tests
 
 ### Installation
