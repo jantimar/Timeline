@@ -63,9 +63,3 @@ extension TimelineGridViewModel {
         return chunk * timeIntervalOffset
     }
 }
-
-
-struct Chunk {
-    let date: Date
-    let title: String
-}
