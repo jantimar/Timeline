@@ -20,7 +20,7 @@ public struct TimelineView<
     public var body: some View {
         ScrollViewReader { scrollReader in
             GeometryReader { reader in
-                ScrollView(.horizontal) {
+                ScrollView([.horizontal, .vertical]) {
                     HStack(spacing: 0) {
                         ZStack(alignment: .topLeading) {
                             // Add Grid view
@@ -42,14 +42,14 @@ public struct TimelineView<
                         // Identifier for scroll on trailing
                         Text("").id(trailingIdentifier)
                     }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: CGFloat(viewModel.items.count) * (rowHeight + rowOffset) + 40)
                 }
             }
             .onAppear {
                 scrollReader.scrollTo(trailingIdentifier, anchor: .trailing)
             }
         }
-        .frame(maxWidth: .infinity)
-        .frame(height: CGFloat(viewModel.items.count) * (rowHeight + rowOffset) + 40)
         // + 40 is grid numbers height
     }
 
@@ -118,7 +118,7 @@ private extension TimelineView {
     // Vertical rows
     @ViewBuilder
     func rows(width: CGFloat) -> some View {
-        VStack(alignment: .leading, spacing: rowOffset) {
+        LazyVStack(alignment: .leading, spacing: rowOffset) {
             // Iterate rows
             ForEach(Array(viewModel.items.enumerated()), id: \.offset) { row in
                 ZStack(alignment: .leading) {
