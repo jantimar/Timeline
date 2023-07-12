@@ -118,7 +118,7 @@ private extension TimelineView {
     // Vertical rows
     @ViewBuilder
     func rows(width: CGFloat) -> some View {
-        VStack(alignment: .leading, spacing: rowOffset) {
+        LazyVStack(alignment: .leading, spacing: rowOffset) {
             // Iterate rows
             ForEach(Array(viewModel.items.enumerated()), id: \.offset) { row in
                 ZStack(alignment: .leading) {
